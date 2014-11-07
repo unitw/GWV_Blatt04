@@ -1,6 +1,5 @@
 package gwv_blatt04;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,23 +12,28 @@ import java.io.IOException;
  *
  * @author 3dibbern
  */
-public class EnvironmentReader
-{
+public class EnvironmentReader {
 
     private final String _location;
     private final int _lineCount;
     private final int _lineLength;
     private final char START_CHAR = 's';
     private final char GOAL_CHAR = 'g';
+    private final char PORTAL_CHAR1 = '1';
+    private final char PORTAL_CHAR2 = '2';
 
     private char[][] _environment;
     private int[] _startPos;
     private int[] _goalPos;
+    private int[] _portalPos1Eingang;
+    private int[] _porta1Pos1Ausgang;
+    private int[] _portal4PosEingang;
+    private int[] _portalPos4Ausgang;
 
     /**
      * Creates an Environment reader that reads the specified file. The text
      * file must contain exactly one 's'. This denotes the start point for a
-     * search. 
+     * search.
      *
      * @param location The path of the the text file to be read
      * @param lineCount The number of lines that are in the text file or that
@@ -39,8 +43,7 @@ public class EnvironmentReader
      * @throws IOException If the path is not valid or not a text file, an
      * IOException is thrown
      */
-    public EnvironmentReader(String location, int lineCount, int lineLength) throws IOException
-    {
+    public EnvironmentReader(String location, int lineCount, int lineLength) throws IOException {
         _location = location;
         _lineCount = lineCount;
         _lineLength = lineLength;
@@ -48,94 +51,117 @@ public class EnvironmentReader
         readEnvironment();
     }
 
-    private void readEnvironment() throws IOException
-    {
+    private void readEnvironment() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(_location));
 
         char[][] environment = new char[_lineCount][_lineLength];
 
-        for (int currentLine = 0; currentLine < _lineCount; ++currentLine)
-        {
+        for (int currentLine = 0; currentLine < _lineCount; ++currentLine) {
             String line = reader.readLine();
-            for (int linePos = 0; linePos < line.length(); ++linePos)
-            {
+            for (int linePos = 0; linePos < line.length(); ++linePos) {
                 char currentChar = line.charAt(linePos);
-                if (currentChar == START_CHAR)
-                {
+                if (currentChar == START_CHAR) {
                     _startPos = new int[2];
                     _startPos[0] = currentLine;
                     _startPos[1] = linePos;
                 }
                 if (currentChar == GOAL_CHAR) {
                     _goalPos = new int[2];
-                	_goalPos [0] = currentLine;
-                	_goalPos [1] = linePos;
-            	}
-                
-                environment[currentLine][linePos] = currentChar;
-            }
-        }
+                    _goalPos[0] = currentLine;
+                    _goalPos[1] = linePos;
+                }
+                if (currentChar == PORTAL_CHAR1) {
+                    if (_portalPos1Eingang == null) {
+                        _portalPos1Eingang = new int[2];
+                        _portalPos1Eingang[0] = currentLine;
+                        _portalPos1Eingang[1] = linePos;
+                    } else {
+                        _porta1Pos1Ausgang = new int[2];
+                        _porta1Pos1Ausgang[0] = currentLine;
+                        _porta1Pos1Ausgang[1] = linePos;
+                    }
+                    if (currentChar == PORTAL_CHAR2) {
+                        if (_portal4PosEingang == null) {
+                            _portal4PosEingang = new int[2];
+                            _portal4PosEingang[0] = currentLine;
+                            _portal4PosEingang[1] = linePos;
+                        } else {
+                            _portalPos4Ausgang = new int[2];
+                            _portalPos4Ausgang[0] = currentLine;
+                            _portalPos4Ausgang[1] = linePos;
+                        }
 
-        reader.close();
-        _environment = environment;
+                    }
+
+                    environment[currentLine][linePos] = currentChar;
+                }
+            }
+
+            reader.close();
+            _environment = environment;
+        }
     }
 
     /**
      * Returns the environment that was read during instanciation
+     *
      * @return the environment as a char[][]
      */
-    public char[][] getEnvironment()
-    {
+    public char[][] getEnvironment() {
         return _environment;
     }
 
     /**
-     * Returns the start point of the environment that was read during instanciation
+     * Returns the start point of the environment that was read during
+     * instanciation
+     *
      * @return the start postions as an array. [startPosX, startPosY]
      */
-    public int[] getStartPos()
-    {
+    public int[] getStartPos() {
         return _startPos;
     }
 
     /**
-     * Returns the start point of the environment that was read during instanciation
+     * Returns the start point of the environment that was read during
+     * instanciation
+     *
      * @return the X-Coordinate of the start point
      */
-    public int getStartPosX()
-    {
+    public int getStartPosX() {
         return _startPos[1];
     }
 
     /**
-     * Returns the start point of the environment that was read during instanciation
+     * Returns the start point of the environment that was read during
+     * instanciation
+     *
      * @return the Y-Coordinate of the start point
      */
-    public int getStartPosY()
-    {
+    public int getStartPosY() {
         return _startPos[0];
     }
-    
+
     /**
-     * Returns the goal point of the environment that was read during instanciation
+     * Returns the goal point of the environment that was read during
+     * instanciation
+     *
      * @return the X-Coordinate of the goal point
      */
-    public int getGoalPosX()
-    {
+    public int getGoalPosX() {
         return _goalPos[1];
     }
 
     /**
-     * Returns the goal point of the environment that was read during instanciation
+     * Returns the goal point of the environment that was read during
+     * instanciation
+     *
      * @return the Y-Coordinate of the goal point
      */
-    public int getGoalPosY()
-    {
+    public int getGoalPosY() {
         return _goalPos[0];
     }
-    
-    public char getGoalChar()
-    {
+
+    public char getGoalChar() {
         return GOAL_CHAR;
     }
 }
