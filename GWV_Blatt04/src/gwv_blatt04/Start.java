@@ -75,6 +75,12 @@ public class Start {
     /**
      * Sets up the search environment and initiates the search process.
      */
+    
+    public final void AStarSearch(){
+         List<Character> goalPath = _search.startBFS();
+    }
+    
+    
     public final void BreadthFirstSearch(int fastmode) {
         List<Character> goalPath = _search.startBFS();
 

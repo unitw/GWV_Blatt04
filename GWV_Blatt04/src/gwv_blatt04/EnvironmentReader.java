@@ -27,8 +27,8 @@ public class EnvironmentReader {
     private int[] _goalPos;
     private int[] _portalPos1Eingang;
     private int[] _porta1Pos1Ausgang;
-    private int[] _portal4PosEingang;
-    private int[] _portalPos4Ausgang;
+    private int[] _portalPos2Eingang;
+    private int[] _portalPos2Ausgang;
 
     /**
      * Creates an Environment reader that reads the specified file. The text
@@ -81,14 +81,14 @@ public class EnvironmentReader {
                         _porta1Pos1Ausgang[1] = linePos;
                     }
                     if (currentChar == PORTAL_CHAR2) {
-                        if (_portal4PosEingang == null) {
-                            _portal4PosEingang = new int[2];
-                            _portal4PosEingang[0] = currentLine;
-                            _portal4PosEingang[1] = linePos;
+                        if (_portalPos2Eingang == null) {
+                            _portalPos2Eingang = new int[2];
+                            _portalPos2Eingang[0] = currentLine;
+                            _portalPos2Eingang[1] = linePos;
                         } else {
-                            _portalPos4Ausgang = new int[2];
-                            _portalPos4Ausgang[0] = currentLine;
-                            _portalPos4Ausgang[1] = linePos;
+                            _portalPos2Ausgang = new int[2];
+                            _portalPos2Ausgang[0] = currentLine;
+                            _portalPos2Ausgang[1] = linePos;
                         }
 
                     }

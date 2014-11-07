@@ -87,12 +87,11 @@ public class Search {
      * Starts a depth first search on the environment that was specified during
      * instanciation.
      *
-     * @return If a path to a goal is found, the path is returned as a List, 
-     * if not an empty List is returned. The path is
-     * specified as a series of actions ('s' = go to start point, 'u' = move up,
-     * 'd' = move down, 'l' = move left and 'r' = move right)
-     * The actions correspond to the environment, 
-     * not the direction the robot is currently facing
+     * @return If a path to a goal is found, the path is returned as a List, if
+     * not an empty List is returned. The path is specified as a series of
+     * actions ('s' = go to start point, 'u' = move up, 'd' = move down, 'l' =
+     * move left and 'r' = move right) The actions correspond to the
+     * environment, not the direction the robot is currently facing
      */
     public List<Character> startDFS() {
         reset(); // Resets all values to the start values, needed if multiple searches are performed
@@ -122,7 +121,7 @@ public class Search {
                 char topChar = _searchStack.pop();
                 move(oppositeDirection(topChar));
             }
-            
+
             // Output to the console
             ++schleifenzaehler;
             printEnvironment();
@@ -134,19 +133,18 @@ public class Search {
     }
 
     /**
-     * Starts a breadth first search on the environment that was specified during
-     * instanciation.
+     * Starts a breadth first search on the environment that was specified
+     * during instanciation.
      *
-     * @return If a path to a goal is found, the path is returned as a List, 
-     * if not an empty List is returned. The path is
-     * specified as a series of actions ('s' = go to start point, 'u' = move up,
-     * 'd' = move down, 'l' = move left and 'r' = move right)
-     * The actions correspond to the environment, 
-     * not the direction the robot is currently facing
+     * @return If a path to a goal is found, the path is returned as a List, if
+     * not an empty List is returned. The path is specified as a series of
+     * actions ('s' = go to start point, 'u' = move up, 'd' = move down, 'l' =
+     * move left and 'r' = move right) The actions correspond to the
+     * environment, not the direction the robot is currently facing
      */
     public List<Character> startBFS() {
         int schleifenZaehler = 0;
-        
+
         Node startNode = new Node(_startPosX, _startPosY, START_CHAR);
 
         _bfsQueue.add(startNode);
@@ -180,7 +178,7 @@ public class Search {
 
                 Node neighbour = new Node(_currentPosX, _currentPosY, UP);
                 bfsAddNewPathToFrontier(currentPath, neighbour);
-                
+
                 move(oppositeDirection(UP));
             }
             if (rightIsClearOrGoal()) {
@@ -198,7 +196,7 @@ public class Search {
 
                 Node neighbour = new Node(_currentPosX, _currentPosY, DOWN);
                 bfsAddNewPathToFrontier(currentPath, neighbour);
-                
+
                 move(oppositeDirection(DOWN));
             }
             if (leftIsClearOrGoal()) {
@@ -207,10 +205,10 @@ public class Search {
 
                 Node neighbour = new Node(_currentPosX, _currentPosY, LEFT);
                 bfsAddNewPathToFrontier(currentPath, neighbour);
-                
+
                 move(oppositeDirection(LEFT));
             }
-            
+
             // Output to the console
             printEnvironment();
             ++schleifenZaehler;
@@ -218,19 +216,21 @@ public class Search {
         }
         System.out.println(schleifenZaehler);
         reset();
-        
+
         return new ArrayList<Character>();
     }
 
-    private void bfsAddNewPathToFrontier(Path currentPath, Node neighbour)
-    {
+    public List<Character> startAstarSearch() {
+
+        return new ArrayList<Character>();
+    }
+
+    private void bfsAddNewPathToFrontier(Path currentPath, Node neighbour) {
         Path newPath = currentPath.expandPath(neighbour);
         _frontier.add(newPath);
         _bfsQueue.add(neighbour);
     }
 
-    
-    
     /**
      * Changes the values of currentPosX or currentPosY to move in the specified
      * diretion
@@ -257,7 +257,7 @@ public class Search {
     /**
      * Changes the values of currentPosX or currentPosY to move to position
      * specified in the Node that gets passed to the method
-     * 
+     *
      * @param position The Node containing the information where to move
      */
     private void moveTo(Node position) {
@@ -315,7 +315,6 @@ public class Search {
     // These Methods check wether a goal is in next to the current postion,
     // if it is the direction to move to, to get to the goal gets added to the 
     // _searchStack and true is returned
-    
     private boolean goalInReach() {
         if (topIsGoal()) {
             _searchStack.push(UP);
@@ -349,8 +348,8 @@ public class Search {
     }
 
     private boolean isGoalNode(Node currentNode) {
-        return currentNode.getX() == GOAL_NODE.getX() 
-            && currentNode.getY() == GOAL_NODE.getY();
+        return currentNode.getX() == GOAL_NODE.getX()
+                && currentNode.getY() == GOAL_NODE.getY();
     }
 
     private void reset() {
