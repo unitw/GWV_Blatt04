@@ -2,6 +2,7 @@ package gwv_blatt04;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -21,10 +22,15 @@ public class Search {
     private char[][] _environment;
     private final int _startPosX;
     private final int _startPosY;
-    private final Node GOAL_NODE;
+    private Node GOAL_NODE;
+    private boolean[][] Feld;
+    public boolean suche = false;
 
     private final Set<Path> _frontier;
     private final Queue _bfsQueue;
+
+    LinkedList<Node> Astar_openList;
+    LinkedList<Node> Astar_closedList;
 
     private int _currentPosX;
     private int _currentPosY;
@@ -221,8 +227,101 @@ public class Search {
     }
 
     public List<Character> startAstarSearch() {
+        int schleifenZaehler = 0;
 
-        return new ArrayList<Character>();
+        Node node = null;
+
+        Astar_openList = new LinkedList<>();
+        Astar_closedList.add(new Node(_startPosX, _startPosY, 1, heuristik(_startPosX, _startPosY), null));
+        Astar_closedList = new LinkedList<>();
+
+        while (!Astar_openList.isEmpty()) {
+
+            if (GOAL_NODE != null) {
+                node = GOAL_NODE;
+                this.suche = false;
+            } else if (this.Astar_openList.isEmpty() == false && this.suche == true) {
+                node = AStarSearch();
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private Node AStarSearch() {
+
+        Node naechstbesterNode;
+
+        naechstbesterNode = Astar_openList.get(getLowestCostNode(Astar_openList));
+        Astar_closedList.add(Astar_openList.remove(getLowestCostNode(Astar_openList)));
+
+        if (naechstbesterNode.getX() == GOAL_NODE.getX() && naechstbesterNode.getY() == GOAL_NODE.getY()) {
+            naechstbesterNode.AusgabeXY();
+            GOAL_NODE = naechstbesterNode;
+            return naechstbesterNode;
+        }
+
+        //oberhalb
+        openlistInRangerPrüfer(naechstbesterNode.getX(), naechstbesterNode.getY() - 1, Astar_openList, Astar_closedList, naechstbesterNode);
+
+        //rechts
+        openlistInRangerPrüfer(naechstbesterNode.getX() + 1, naechstbesterNode.getY(), Astar_openList, Astar_closedList, naechstbesterNode);
+
+        //unterhalb
+        openlistInRangerPrüfer(naechstbesterNode.getX(), naechstbesterNode.getY() + 1, Astar_openList, Astar_closedList, naechstbesterNode);
+
+        //links
+        openlistInRangerPrüfer(naechstbesterNode.getX() - 1, naechstbesterNode.getY(), Astar_openList, Astar_closedList, naechstbesterNode);
+
+        return naechstbesterNode;
+    }
+
+    private int getLowestCostNode(LinkedList<Node> list) {
+        int best = list.get(0).getKostenSum();
+
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i).getKostenSum() < best) {
+                best = list.get(i).getKostenSum();
+            }
+        }
+        //get first element with best costs
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getKostenSum() == best) {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    private void openlistInRangerPrüfer(int x, int y, LinkedList<Node> openList, LinkedList<Node> closedList, Node vorher) {
+
+        if (isPointInList(x, y, closedList) == false && Feld[x][y] == true && isPointInList(x, y, openList) == false) {
+            openList.add(new Node(x, y, 1, this.heuristik(x, y), vorher));
+        }
+    }
+
+    private boolean isPointInList(int x, int y, LinkedList<Node> list) {
+        for (Node list1 : list) {
+            if (list1.getX() == x && list1.getY() == y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private int heuristik(int x, int y) {
+        int dx = x - GOAL_NODE.getX();
+        if (dx < 0) {
+            dx = -dx;
+        }
+
+        int dy = y - GOAL_NODE.getY();
+        if (dy < 0) {
+            dy = -dy;
+        }
+
+        return dx + dy;
     }
 
     private void bfsAddNewPathToFrontier(Path currentPath, Node neighbour) {
