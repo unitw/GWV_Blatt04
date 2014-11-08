@@ -11,11 +11,12 @@ package gwv_blatt04;
  */
 public class GWV_Blatt04 {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+
+        Start start = new Start("b");
+        start.initSearch();
+        start.AStarSearch();
+
     }
-    
+
 }

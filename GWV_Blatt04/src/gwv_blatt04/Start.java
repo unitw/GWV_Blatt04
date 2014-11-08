@@ -22,6 +22,7 @@ public class Start {
     public static final int LINE_COUNT = 10;
     public static final int LINE_LENGTH = 20;
 
+    private String modus;
     private Search _search;
 
     public static char[][] copy2DCharArray(char[][] original) {
@@ -38,13 +39,31 @@ public class Start {
 
     }
 
-    private void initSearch() {
+    public Start(String modus) {
+        this.modus = modus;
+    }
+
+    public void initSearch() {
         EnvironmentReader reader = null;
-        URL urlreader = getClass().getResource("/resources/blatt3_environment.txt");
-        String pfad = urlreader.toString().substring(6);
+        String pfad;
+        switch (modus) {
+            case "a": {
+                URL urlreader = ClassLoader.getSystemClassLoader().getResource("resources/blatt4_environment_a.txt");
+                pfad = urlreader.toString().substring(6);
+                break;
+            }
+            case "b": {
+                URL urlreader = ClassLoader.getSystemClassLoader().getResource("resources/blatt4_environment_b2.txt");
+                pfad = urlreader.toString().substring(6);
+                break;
+            }
+            default:
+                return;
+
+        }
 
         try {
-            reader = new EnvironmentReader("C:/blatt3_environment.txt", LINE_COUNT, LINE_LENGTH);
+            reader = new EnvironmentReader(pfad, LINE_COUNT, LINE_LENGTH);
         } catch (IOException ex) {
             Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,12 +94,11 @@ public class Start {
     /**
      * Sets up the search environment and initiates the search process.
      */
-    
-    public final void AStarSearch(){
-         List<Character> goalPath = _search.startBFS();
+    public final void AStarSearch() {
+        List<Character> goalPath = _search.startBFS();
+        System.out.println(goalPath.toString());
     }
-    
-    
+
     public final void BreadthFirstSearch(int fastmode) {
         List<Character> goalPath = _search.startBFS();
 
